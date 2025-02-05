@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let map;
   let markers = [];
   let polylines = [];
+  let isFollowing = true;
   const API_KEY = "tNLDcOe2j8ZwyzeYL5stJiwUWqUxOm5qbWR3Yd4k";
 
   const routes = {
@@ -73,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cabMarker,
     route,
     index = 0,
-    duration = 2000,
+    duration = 3500,
     polylineCoords = [],
     isReturning = false
   ) {
@@ -94,6 +95,20 @@ document.addEventListener("DOMContentLoaded", () => {
     let endLng = route[index + 1][0];
     let startTime = performance.now();
 
+    let deltaX = endLng - startLng;
+    let deltaY = endLat - startLat;
+    let angle = (Math.atan2(deltaY, deltaX) * 180) / Math.PI;
+
+    angle -= 90;
+
+    if (isReturning) {
+      angle += 180;
+    }
+
+    let cabMarkerElement = cabMarker.getElement();
+    let carImage = cabMarkerElement.querySelector(".cab-image");
+    cabMarkerElement.style.transform = `rotate(${angle}deg)`;
+
     function animate(currentTime) {
       let elapsed = currentTime - startTime;
       let progress = Math.min(elapsed / duration, 1);
@@ -103,6 +118,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       cabMarker.setPosition(ol.proj.fromLonLat([newLng, newLat]));
       polylineCoords.push([newLng, newLat]);
+
+      if (isFollowing) {
+        map.getView().setCenter(ol.proj.fromLonLat([newLng, newLat]));
+      }
 
       if (progress < 1) {
         requestAnimationFrame(animate);
@@ -192,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
           Object.keys(routes).forEach((cab, index) => {
             let cabMarkerElement = document.createElement("div");
             cabMarkerElement.className = "cab-marker";
-            cabMarkerElement.innerHTML = "🚖";
+            cabMarkerElement.innerHTML = `<img src="car-icon.png" class="cab-image" />`;
             cabMarkerElement.style.fontSize = "24px";
             cabMarkerElement.style.fontWeight = "bold";
             cabMarkerElement.style.color =
