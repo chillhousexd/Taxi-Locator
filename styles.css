@@ -1,0 +1,61 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+}
+
+#searchBox {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px 15px;
+    margin-top: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#map {
+    width: 100%;
+    height: 500px;
+    border: 1px solid #ccc;
+}
+
+#suggestionsBox {
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 80%;
+    margin: auto;
+    text-align: left;
+}
+
+.suggestion-item {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0;
+}
+
+
+
+/* const cabs = [
+    { id: 1, latOffset: 0.002, lngOffset: 0.002 },
+    { id: 2, latOffset: -0.002, lngOffset: 0.002 },
+    { id: 3, latOffset: 0.005, lngOffset: -0.005 },
+    { id: 3, latOffset: 0.009, lngOffset: -0.006 },
+    { id: 3, latOffset: 0.032, lngOffset: -0.054 },
+    { id: 3, latOffset: 0.004, lngOffset: -0.056 },
+    { id: 3, latOffset: 0.006, lngOffset: -0.008 },
+    { id: 3, latOffset: 0.045, lngOffset: -0.452 },
+  ]; */
