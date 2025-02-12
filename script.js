@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cabMarker,
     route,
     index = 0,
-    duration = 3500,
+    duration = 2000,
     polylineCoords = [],
     isReturning = false
   ) {
@@ -109,11 +109,11 @@ document.addEventListener("DOMContentLoaded", () => {
           0,
           duration,
           [],
-            
+          true
         );
       } else {
-        isReturning = true;
-        console.log(isReturning);
+        // isReturning = true;
+        // console.log(isReturning);
         console.log("Cab returned to the starting point!");
       }
       return;
@@ -144,8 +144,8 @@ document.addEventListener("DOMContentLoaded", () => {
       let angle = (Math.atan2(deltaY, -deltaX) * 180) / Math.PI - 90;
 
       if (isReturning) {
-        angle += 180;
-      }
+        angle += 360;
+      }      
 
       let cabMarkerElement = cabMarker.getElement();
       if (cabMarkerElement) {
