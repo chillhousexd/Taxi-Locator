@@ -48,7 +48,7 @@ button {
 }
 
 .cab-image {
-    width: 30px;  /* Adjust based on your map scale */
+    width: 10px;  /* Adjust based on your map scale */
     height: auto;
     transition: transform 0.2s ease-in-out;
   }

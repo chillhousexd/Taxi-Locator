@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let map;
   let markers = [];
   let polylines = [];
-  let isFollowing = true;
+  let isFollowing = false;
   const API_KEY = "tNLDcOe2j8ZwyzeYL5stJiwUWqUxOm5qbWR3Yd4k";
 
   const routes = {
@@ -25,19 +25,41 @@ document.addEventListener("DOMContentLoaded", () => {
       [85.102543, 25.603906], // Patna Zoo
     ],
     cab2: [
-      [85.043537, 25.583463], // Danapur Station
-      [85.043537, 25.584808],
-      [85.043441, 25.586424],
-      [85.043298, 25.587743],
-      [85.043104, 25.59028],
-      [85.043038, 25.592066],
-      [85.042834, 25.596358],
-      [85.042649, 25.599693],
-      [85.042464, 25.603171],
-      [85.042253, 25.608057],
-      [85.041758, 25.616092],
-      [85.041542, 25.620482],
-      [85.041441, 25.62317], // Shaguna More
+      [85.043555, 25.583438],
+      [85.043555, 25.583927],
+      [85.043509, 25.584552],
+      [85.043509, 25.585136],
+      [85.043469, 25.586078],
+      [85.043413, 25.586525],
+      [85.043367, 25.587461],
+      [85.043312, 25.587968],
+      [85.043226, 25.588686],
+      [85.043211, 25.589136],
+      [85.043133, 25.590466],
+      [85.043062, 25.591437],
+      [85.042953, 25.593542],
+      [85.042852, 25.595396],
+      [85.042743, 25.597909],
+      [85.04262, 25.599612],
+      [85.042526, 25.601906],
+      [85.042417, 25.604341],
+      [85.042378, 25.605621],
+      [85.042183, 25.609013],
+      [85.042011, 25.611103],
+      [85.041942, 25.613155],
+      [85.041794, 25.616574],
+      [85.041661, 25.618348],
+      [85.041559, 25.620754],
+      [85.041416, 25.622901],
+      [85.041457, 25.623301],
+      [85.041425, 25.623524],
+      [85.04145, 25.623752],
+      [85.041764, 25.623765],
+      [85.041931, 25.623508],
+      [85.041934, 25.623169],
+      [85.041721, 25.623087],
+      [85.041558, 25.622751],
+      [85.041559, 25.622751],
     ],
     cab3: [
       [85.041441, 25.62317], // Shaguna More
@@ -78,14 +100,22 @@ document.addEventListener("DOMContentLoaded", () => {
     polylineCoords = [],
     isReturning = false
   ) {
-    if (index >= route.length - 1 && !isReturning) {
-      console.log("Cab reached the final destination! Returning to start...");
-      moveCabAlongRoute(cabMarker, route.reverse(), 0, duration, [], true);
-      return;
-    }
-
-    if (index >= route.length - 1 && isReturning) {
-      console.log("Cab returned to the starting point!");
+    if (index >= route.length - 1) {
+      if (!isReturning) {
+        console.log("Cab reached the final destination! Returning to start...");
+        moveCabAlongRoute(
+          cabMarker,
+          [...route].reverse(),
+          0,
+          duration,
+          [],
+            
+        );
+      } else {
+        isReturning = true;
+        console.log(isReturning);
+        console.log("Cab returned to the starting point!");
+      }
       return;
     }
 
@@ -94,20 +124,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let endLat = route[index + 1][1];
     let endLng = route[index + 1][0];
     let startTime = performance.now();
-
-    let deltaX = endLng - startLng;
-    let deltaY = endLat - startLat;
-    let angle = (Math.atan2(deltaY, deltaX) * 180) / Math.PI;
-
-    angle -= 90;
-
-    if (isReturning) {
-      angle += 180;
-    }
-
-    let cabMarkerElement = cabMarker.getElement();
-    let carImage = cabMarkerElement.querySelector(".cab-image");
-    cabMarkerElement.style.transform = `rotate(${angle}deg)`;
 
     function animate(currentTime) {
       let elapsed = currentTime - startTime;
@@ -121,6 +137,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (isFollowing) {
         map.getView().setCenter(ol.proj.fromLonLat([newLng, newLat]));
+      }
+
+      let deltaX = endLng - startLng;
+      let deltaY = endLat - startLat;
+      let angle = (Math.atan2(deltaY, -deltaX) * 180) / Math.PI - 90;
+
+      if (isReturning) {
+        angle += 180;
+      }
+
+      let cabMarkerElement = cabMarker.getElement();
+      if (cabMarkerElement) {
+        cabMarkerElement.style.transform = `rotate(${angle}deg)`;
       }
 
       if (progress < 1) {
@@ -160,6 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }),
       }),
     });
+
     map.addLayer(polyline);
     polylines.push(polyline);
   }
@@ -229,7 +259,6 @@ document.addEventListener("DOMContentLoaded", () => {
             map.addOverlay(cabMarker);
             markers.push(cabMarker);
 
-            // Start moving the cab along the route
             moveCabAlongRoute(cabMarker, routes[cab]);
           });
         } else {
